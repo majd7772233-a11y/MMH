@@ -44,7 +44,7 @@ android {
     buildFeatures { buildConfig = true }
 
     defaultConfig {
-        applicationId = "com.junkfood.seal"
+        applicationId = "com.magd.m_media.hub"
         minSdk = 24
         targetSdk = 35
         versionCode = 200_000_150
@@ -110,7 +110,7 @@ android {
             }
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            resValue("string", "app_name", "Seal Debug")
+            resValue("string", "app_name", "M Media Hub Debug")
         }
     }
 
@@ -125,7 +125,7 @@ android {
         create("githubPreview") {
             dimension = "publishChannel"
             applicationIdSuffix = ".preview"
-            resValue("string", "app_name", "Seal Preview")
+            resValue("string", "app_name", "M Media Hub Preview")
         }
 
         create("fdroid") {
@@ -139,7 +139,7 @@ android {
     applicationVariants.all {
         outputs.all {
             (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
-                "Seal-${defaultConfig.versionName}-${name}.apk"
+                "MMediaHub-${defaultConfig.versionName}-${name}.apk"
         }
     }
 
@@ -151,7 +151,7 @@ android {
     }
     androidResources { generateLocaleConfig = true }
 
-    namespace = "com.junkfood.seal"
+    namespace = "com.magd.m_media.hub"
 }
 
 ktfmt { kotlinLangStyle() }
