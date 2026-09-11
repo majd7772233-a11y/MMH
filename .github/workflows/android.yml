@@ -6,35 +6,51 @@ on:
       - 'v*'
   workflow_dispatch:
 
+# صلاحية GitHub Actions للوصول إلى محتويات المستودع وإنشاء Release
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: 'gradle'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-    - uses: gradle/actions/setup-gradle@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-    - name: Build Release APK
-      run: ./gradlew assembleGenericRelease
+      - name: Build Release APK
+        run: ./gradlew assembleGenericRelease
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apks
-        path: app/build/outputs/apk/generic/release/*.apk
-        if-no-files-found: error
-        retention-days: 20
+      # يرفع APK كـArtifact أيضاً، لكن هذا مؤقت حسب سياسة GitHub
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apks
+          path: app/build/outputs/apk/generic/release/*.apk
+          if-no-files-found: error
+          retention-days: 90
+
+      # رفع APK إلى GitHub Releases
+      - name: Upload APK to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/generic/release/*.apk
+          generate_release_notes: true
+          fail_on_unmatched_files: true
